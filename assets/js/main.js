@@ -11,7 +11,7 @@ function createDeleteButton(li) {
   li.innerHTML += " ";
   const deleteButton = document.createElement("button");
   deleteButton.innerText = "Apagar";
-  deleteButton.setAttribute('class', 'apagar')
+  deleteButton.setAttribute("class", "apagar");
   li.appendChild(deleteButton);
 }
 
@@ -21,6 +21,7 @@ function createTask(taskInput) {
   taskList.appendChild(li);
   clearInput();
   createDeleteButton(li);
+  saveTasks();
 }
 
 function clearInput() {
@@ -40,13 +41,38 @@ btnAddTask.addEventListener("click", function () {
   createTask(newTask.value);
 });
 
-function deleteTask (el) {
-  el.parentElement.remove()
+function deleteTask(el) {
+  el.parentElement.remove();
+  saveTasks();
 }
 
-document.addEventListener("click", function(e) {
+document.addEventListener("click", function (e) {
   const el = e.target;
-  if(el.classList.contains('apagar')) {
-    deleteTask(el)
+  if (el.classList.contains("apagar")) {
+    deleteTask(el);
   }
-})
+});
+
+function saveTasks() {
+  const liTasks = taskList.querySelectorAll("li");
+  const listOfTasks = [];
+
+  for (let task of liTasks) {
+    let taskText = task.innerText;
+    taskText = taskText.replace("Apagar", "").trim();
+    listOfTasks.push(taskText);
+  }
+
+  const tasksJSON = JSON.stringify(listOfTasks);
+  localStorage.setItem("tasks", tasksJSON);
+}
+
+function addSavedTasks() {
+  const tasks = localStorage.getItem("tasks");
+  const listOfTasks = JSON.parse(tasks);
+
+  for (let task of listOfTasks) {
+    createTask(task);
+  }
+}
+addSavedTasks()
