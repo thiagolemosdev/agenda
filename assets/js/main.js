@@ -7,11 +7,20 @@ function createLi() {
   return li;
 }
 
+function createDeleteButton(li) {
+  li.innerHTML += " ";
+  const deleteButton = document.createElement("button");
+  deleteButton.innerText = "Apagar";
+  deleteButton.setAttribute('class', 'apagar')
+  li.appendChild(deleteButton);
+}
+
 function createTask(taskInput) {
   const li = createLi();
   li.innerHTML = taskInput;
   taskList.appendChild(li);
   clearInput();
+  createDeleteButton(li);
 }
 
 function clearInput() {
@@ -30,3 +39,14 @@ btnAddTask.addEventListener("click", function () {
   if (!newTask.value) return;
   createTask(newTask.value);
 });
+
+function deleteTask (el) {
+  el.parentElement.remove()
+}
+
+document.addEventListener("click", function(e) {
+  const el = e.target;
+  if(el.classList.contains('apagar')) {
+    deleteTask(el)
+  }
+})
